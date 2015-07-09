@@ -2,7 +2,7 @@
 
 ###############################################################################
 # This script is used for doing the plot of the demographic history of        #
-# a random-mating population from a ms command. At the same time, we script   #
+# a random-mating population from a ms command. At the same time, the script  #
 # allows to plot (in the same figure) the demographic history infered by the  #
 # PSMC software.                                                              #
 ###############################################################################
@@ -16,7 +16,7 @@ MS_COMMAND = "./ms 2 100 -t 30000 -r 6000 30000000 -eN 0.01 0.1 -eN 0.06 1 \
                 -eN 0.2 0.5 -eN 1 1 -eN 2 2 -p 8 -seeds 1747 45896 23615"
 
 # Path to the output file comming from the PSMC
-PSMC_RESULTS = "./result_files/experiment_1.psmc"
+PSMC_RESULTS = "./yh.psmc"
 
 # Bin size used to generate the imput of PSMC (default is 100)
 BIN_SIZE = 100
@@ -32,6 +32,10 @@ X_MIN = 1e3
 X_MAX = 1e7
 Y_MIN = 0
 Y_MAX = 5e4
+
+# What plot to do
+PLOT_MS = False
+PLOT_PSMC_RESULTS = True
 #==============================================================================
 
 def ms2fun(ms_command = MS_COMMAND, u = MUTATION_RATE):
@@ -84,17 +88,22 @@ def psmc2fun(filename=PSMC_RESULTS, s=BIN_SIZE, u=MUTATION_RATE):
     return(times, sizes)
 
 if __name__ == "__main__":
-    (estimated_times, estimated_sizes) = psmc2fun(PSMC_RESULTS, BIN_SIZE, MUTATION_RATE)
-    (real_times, real_sizes) = ms2fun(MS_COMMAND, MUTATION_RATE)
     
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    ax.step(real_times, real_sizes, where='post', linestyle='-', color='k', label = "Real history")    
-    ax.step(estimated_times, estimated_sizes, where='post', linestyle='--', color='b', label = "PSMC estimated history")
+
+    if PLOT_MS:
+        (real_times, real_sizes) = ms2fun(MS_COMMAND, MUTATION_RATE)
+        ax.step(real_times, real_sizes, where='post', linestyle='-', color='k', label = "Real history")
+    
+    if PLOT_PSMC_RESULTS:
+        (estimated_times, estimated_sizes) = psmc2fun(PSMC_RESULTS, BIN_SIZE, MUTATION_RATE)    
+        ax.step(estimated_times, estimated_sizes, where='post', linestyle='--', color='b', label = "PSMC estimated history")
     
     ax.set_xlabel("Time in years (25 years/generation)")
     ax.set_ylabel("Effective size (x 10^4)")
     ax.ticklabel_format(axis='y', style='sci', scilimits=(-2,2))
+    ax.grid(True)
     ax.set_xlim(X_MIN, X_MAX)
     ax.set_ylim(Y_MIN, Y_MAX)
     ax.set_xscale('log')
