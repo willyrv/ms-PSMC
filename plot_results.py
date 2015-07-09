@@ -16,7 +16,7 @@ MS_COMMAND = "./ms 2 100 -t 30000 -r 6000 30000000 -eN 0.01 0.1 -eN 0.06 1 \
                 -eN 0.2 0.5 -eN 1 1 -eN 2 2 -p 8 -seeds 1747 45896 23615"
 
 # Path to the output file comming from the PSMC
-PSMC_RESULTS = "./yh.psmc"
+PSMC_RESULTS = "./dem_history_sim1.psmc"
 
 # Bin size used to generate the imput of PSMC (default is 100)
 BIN_SIZE = 100
@@ -34,7 +34,7 @@ Y_MIN = 0
 Y_MAX = 5e4
 
 # What plot to do
-PLOT_MS = False
+PLOT_MS = True
 PLOT_PSMC_RESULTS = True
 #==============================================================================
 
